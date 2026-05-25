@@ -1,63 +1,98 @@
-import sys
 import pygame
 from constants import *
 from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from shot import Shot
+from particle import Particle
 
 
 def main():
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    pygame.display.set_caption("Asteroids")
     clock = pygame.time.Clock()
+    font = pygame.font.Font(None, 36)
+    big_font = pygame.font.Font(None, 74)
 
-    # Groups
-    updatable = pygame.sprite.Group()
-    drawable = pygame.sprite.Group()
-    asteroids = pygame.sprite.Group()
-    shots = pygame.sprite.Group()
-
-    Asteroid.containers = (asteroids, updatable, drawable)
-    Shot.containers = (shots, updatable, drawable)
-    Player.containers = (updatable, drawable)
-    AsteroidField.containers = updatable
-
-    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
-    asteroid_field = AsteroidField()
-    
     running = True
-    dt = 0
-    black = (0, 0, 0)
-
-    # Game loop
     while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
+        updatable = pygame.sprite.Group()
+        drawable = pygame.sprite.Group()
+        asteroids = pygame.sprite.Group()
+        shots = pygame.sprite.Group()
 
-        updatable.update(dt)
-        screen.fill(color=black)
+        Asteroid.containers = (asteroids, updatable, drawable)
+        Shot.containers = (shots, updatable, drawable)
+        Player.containers = (updatable, drawable)
+        AsteroidField.containers = (updatable,)
+        Particle.containers = (updatable, drawable)
 
-        for asteroid in asteroids:
-            if asteroid.collision(player):
-                print("Game over!")
-                sys.exit()
+        player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+        AsteroidField()
 
-            for shot in shots:
-                if asteroid.collision(shot):
-                    shot.kill()
-                    asteroid.split()
+        score = 0
+        dt = 0
+        game_over = False
 
-        for d in drawable:
-            d.draw(screen)
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                if game_over and event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        game_over = "restart"
+                    elif event.key == pygame.K_ESCAPE:
+                        running = False
 
-        pygame.display.flip()
+            if not running:
+                break
+            if game_over == "restart":
+                break
 
-        # Limit framerate to 60 FPS
-        dt = clock.tick(60) / 1000
+            if not game_over:
+                updatable.update(dt)
+
+                for asteroid in asteroids:
+                    if player.invincibility_timer <= 0 and asteroid.collision(player):
+                        player.lives -= 1
+                        if player.lives > 0:
+                            player.respawn()
+                        else:
+                            game_over = True
+                            break
+
+                    for shot in shots:
+                        if asteroid.collision(shot):
+                            shot.kill()
+                            score += asteroid.get_score()
+                            for _ in range(PARTICLE_COUNT):
+                                Particle(asteroid.position.x, asteroid.position.y)
+                            asteroid.split()
+                            break
+
+            screen.fill((0, 0, 0))
+
+            if game_over:
+                game_over_text = big_font.render("GAME OVER", True, (255, 255, 255))
+                score_text = font.render(f"Final Score: {score}", True, (255, 255, 255))
+                restart_text = font.render("Press ENTER to restart or ESC to quit", True, (150, 150, 150))
+                screen.blit(game_over_text, game_over_text.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 50)))
+                screen.blit(score_text, score_text.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 20)))
+                screen.blit(restart_text, restart_text.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 70)))
+            else:
+                for d in drawable:
+                    d.draw(screen)
+                score_surface = font.render(f"Score: {score}", True, (255, 255, 255))
+                lives_surface = font.render(f"Lives: {player.lives}", True, (255, 255, 255))
+                screen.blit(score_surface, (10, 10))
+                screen.blit(lives_surface, (10, 45))
+
+            pygame.display.flip()
+            dt = clock.tick(60) / 1000
 
     pygame.quit()
+
 
 if __name__ == "__main__":
     main()
