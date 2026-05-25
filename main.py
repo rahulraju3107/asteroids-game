@@ -11,8 +11,7 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Asteroids")
     clock = pygame.time.Clock()
-    font = pygame.font.Font(None, 36)
-    big_font = pygame.font.Font(None, 74)
+    font = pygame.font.SysFont("monospace", 24)
 
     running = True
     while running:
@@ -70,12 +69,12 @@ def main():
             screen.fill((0, 0, 0))
 
             if game_over:
-                game_over_text = big_font.render("GAME OVER", True, (255, 255, 255))
-                score_text = font.render(f"Final Score: {score}", True, (255, 255, 255))
-                restart_text = font.render("Press ENTER to restart or ESC to quit", True, (150, 150, 150))
-                screen.blit(game_over_text, game_over_text.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 50)))
-                screen.blit(score_text, score_text.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 20)))
-                screen.blit(restart_text, restart_text.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 70)))
+                game_over_text = font.render("GAME OVER", True, (255, 255, 255))
+                score_text = font.render(f"Score: {score}", True, (255, 255, 255))
+                restart_text = font.render("ENTER to restart / ESC to quit", True, (150, 150, 150))
+                screen.blit(game_over_text, game_over_text.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 30)))
+                screen.blit(score_text, score_text.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 10)))
+                screen.blit(restart_text, restart_text.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 45)))
             else:
                 for d in drawable:
                     d.draw(screen)
