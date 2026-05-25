@@ -4,7 +4,6 @@ from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from shot import Shot
-from particle import Particle
 
 
 def main():
@@ -26,7 +25,6 @@ def main():
         Shot.containers = (shots, updatable, drawable)
         Player.containers = (updatable, drawable)
         AsteroidField.containers = (updatable,)
-        Particle.containers = (updatable, drawable)
 
         player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
         AsteroidField()
@@ -66,8 +64,6 @@ def main():
                         if asteroid.collision(shot):
                             shot.kill()
                             score += asteroid.get_score()
-                            for _ in range(PARTICLE_COUNT):
-                                Particle(asteroid.position.x, asteroid.position.y)
                             asteroid.split()
                             break
 
