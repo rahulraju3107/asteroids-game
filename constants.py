@@ -19,3 +19,12 @@ SHOT_RADIUS = 5
 SCORE_LARGE = 20
 SCORE_MEDIUM = 50
 SCORE_SMALL = 100
+
+DIFFICULTY_OPTIONS = ["Easy", "Normal", "Hard"]
+DIFFICULTY_SETTINGS = {
+    "Easy":   {"spawn_rate_mult": 1.5, "speed_mult": 0.7},
+    "Normal": {"spawn_rate_mult": 1.0, "speed_mult": 1.0},
+    "Hard":   {"spawn_rate_mult": 0.6, "speed_mult": 1.4},
+}
+
+HIGHSCORES_FILE = "highscores.md"
