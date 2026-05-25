@@ -4,14 +4,12 @@ A classic Asteroids arcade game built with Python and Pygame. Navigate your ship
 
 ## Features
 
-- Title screen with name entry and difficulty selection
 - Three difficulty levels (Easy, Normal, Hard) affecting spawn rate and asteroid speed
 - Player-controlled ship with rotation and forward/reverse thrust
 - Asteroids that split into smaller, faster fragments when shot
 - Score system with bonus points for smaller asteroids
 - 3 lives with brief invincibility on respawn
 - Increasing difficulty as time progresses
-- Screen wrapping for seamless movement
 - Persistent high scores saved to a local file
 - Game over screen with top 5 leaderboard
 
