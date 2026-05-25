@@ -9,7 +9,6 @@ A classic Asteroids arcade game built with Python and Pygame. Navigate your ship
 - Score system with bonus points for smaller asteroids
 - 3 lives with brief invincibility on respawn
 - Increasing difficulty as time progresses
-- Particle effects on asteroid destruction
 - Screen wrapping for seamless movement
 - Game over screen with restart support
 
